@@ -7,8 +7,10 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 
-import HomeStackScreens from './HomeStackScreen';
+import {HomeStackScreens, ProfileStackScreen} from './StackScreen';
+
 import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -57,6 +59,24 @@ function DrawerNavigator(props) {
                 <Text>
                   <Entypo
                     name="home"
+                    size={23}
+                    color={props.focused ? '#7047a3' : 'black'}
+                  />
+                </Text>
+              );
+            },
+          }}
+        />
+        <Drawer.Screen
+          name="Profile" // routing name
+          component={ProfileStackScreen} //screen name
+          options={{
+            title: 'Profile',
+            drawerIcon: props => {
+              return (
+                <Text>
+                  <AntDesign
+                    name="user"
                     size={23}
                     color={props.focused ? '#7047a3' : 'black'}
                   />
