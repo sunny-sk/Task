@@ -16,7 +16,6 @@ const App = () => {
           <DrawerNavigator />
         </NavigationContainer>
       </SafeAreaProvider>
-      ;
     </>
   );
 };

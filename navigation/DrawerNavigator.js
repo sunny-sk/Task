@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Image} from 'react-native';
+import {View, Text, Image} from 'react-native';
 
 import {
   createDrawerNavigator,
@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/drawer';
 
 import HomeStackScreens from './HomeStackScreen';
-
+import Entypo from 'react-native-vector-icons/Entypo';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
@@ -18,7 +18,7 @@ function CustomDrawerContent(props) {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image
             style={{height: 80, width: 80}}
-            source={require('../asset/images/logoOriginalTransparent.png')}
+            source={require('../assets/images/logoOriginalTransparent.png')}
           />
         </View>
       </View>
@@ -33,9 +33,7 @@ function DrawerNavigator(props) {
       <Drawer.Navigator
         drawerContent={props => CustomDrawerContent(props)}
         initialRouteName="Home"
-        drawerType="front" // back|| front||slide
-        hideStatusBar={false}
-        // drawerPosition=''
+        drawerType="slide"
         drawerStyle={{
           backgroundColor: '#fff', //drawer background color
         }}
@@ -56,11 +54,13 @@ function DrawerNavigator(props) {
             title: 'Home',
             drawerIcon: props => {
               return (
-                <Entypo
-                  name="home"
-                  size={23}
-                  color={props.focused ? '#7047a3' : 'black'}
-                />
+                <Text>
+                  <Entypo
+                    name="home"
+                    size={23}
+                    color={props.focused ? '#7047a3' : 'black'}
+                  />
+                </Text>
               );
             },
           }}

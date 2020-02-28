@@ -41,3 +41,5 @@ export function HomeStackScreens() {
     </HomeStack.Navigator>
   );
 }
+
+export default HomeStackScreens;
