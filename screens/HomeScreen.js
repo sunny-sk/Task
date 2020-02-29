@@ -5,6 +5,7 @@ import {CheckBox, Divider} from 'react-native-elements';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Colors from '../constants/Color';
 
 const HomeScreen = props => {
   const [tasks, setTasks] = useState([
@@ -52,7 +53,7 @@ const HomeScreen = props => {
   });
   return (
     <>
-      <View style={{padding: 10}}>
+      <View style={{padding: 10, height: '100%'}}>
         <View style={{backgroundColor: 'white'}}>
           <View style={{flexDirection: 'row'}}>
             <View
@@ -84,6 +85,29 @@ const HomeScreen = props => {
             }}></View>
         </View>
         <Divider style={{backgroundColor: 'black'}} />
+        <View
+          style={{
+            backgroundColor: Colors.main,
+            height: 50,
+            width: 50,
+            borderRadius: 50,
+            position: 'absolute',
+            bottom: 40,
+            right: '10%',
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate('CreateTask');
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+              }}>
+              <AntDesign name="plus" size={30} color="#fff" />
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );
