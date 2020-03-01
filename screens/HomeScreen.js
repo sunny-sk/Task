@@ -1,31 +1,37 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
-import {TouchableOpacity, View, Text, Switch, Button} from 'react-native';
+import {
+  TouchableOpacity,
+  ScrollView,
+  View,
+  Text,
+  Switch,
+  Button,
+} from 'react-native';
 import {CheckBox, Divider} from 'react-native-elements';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Colors from '../constants/Color';
 
+import {useSelector, useDispatch} from 'react-redux';
+import {completeTask} from '../store/action/TaskActions';
+
 const HomeScreen = props => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: 'no park',
-      task: 'do not go park',
-      icCompleted: false,
-      type: 'normal',
-      date: '28/02/2020',
-    },
-    {
-      id: 2,
-      title: 'finish office work',
-      task: 'all api should be integrate',
-      icCompleted: false,
-      type: 'normal',
-      date: '28/02/2020',
-    },
-  ]);
+  const [tasks, setTasks] = useState([]);
+  const [completedTask, setCompletedTask] = useState([]);
+  const availableData = useSelector(state => {
+    return state.tasks;
+  });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setTasks([...availableData.tasks]);
+  }, [availableData]);
+
+  const onCompleteTask = id => {
+    dispatch(completeTask(id));
+  };
+
   props.navigation.setOptions({
     headerLeft: () => {
       return (
@@ -54,37 +60,39 @@ const HomeScreen = props => {
   return (
     <>
       <View style={{padding: 10, height: '100%'}}>
-        <View style={{backgroundColor: 'white'}}>
-          <View style={{flexDirection: 'row'}}>
-            <View
-              style={{
-                padding: 10,
-                width: '80%',
-                justifyContent: 'center',
-              }}>
-              <Text style={{textAlign: 'center'}}>
-                this is my data of task 1
-              </Text>
-            </View>
-            <View style={{width: '20%'}}>
-              <CheckBox
-                style={{backgroundColor: 'white'}}
-                center
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={true}
-                checkedColor={'green'}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              width: '100%',
-              backgroundColor: 'green',
-              height: 1.5,
-            }}></View>
+        {/* remaining tasks */}
+        <View style={{}}>
+          <ScrollView>
+            {tasks.map((task, index) => (
+              <View style={{flexDirection: 'row'}} key={task.id}>
+                <View
+                  style={{
+                    padding: 10,
+                    width: '80%',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{textAlign: 'center'}}>{task.task}</Text>
+                </View>
+                <View style={{width: '20%'}}>
+                  <CheckBox
+                    onPress={() => {
+                      onCompleteTask(index);
+                    }}
+                    style={{backgroundColor: 'white'}}
+                    center
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checked={task.isCompleted}
+                    checkedColor={'green'}
+                  />
+                </View>
+              </View>
+            ))}
+          </ScrollView>
         </View>
         <Divider style={{backgroundColor: 'black'}} />
+
+        {/* create Task  */}
         <View
           style={{
             backgroundColor: Colors.main,

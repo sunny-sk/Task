@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 
 import DrawerNavigator from './navigation/DrawerNavigator';
 import {enableScreens} from 'react-native-screens';
@@ -13,10 +13,11 @@ import {combineReducers, createStore, applyMiddleware} from 'redux';
 
 enableScreens();
 const App = () => {
-  const roottReducer = combineReducers({
+  const rootReducer = combineReducers({
     tasks: taskReducers,
   });
-  const store = createStore(roottReducer, applyMiddleware(ReduxThunk));
+  const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+  console.log('in app.js');
   return (
     <>
       <StatusBar backgroundColor="#7047a3" />

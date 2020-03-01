@@ -1,26 +1,40 @@
 const initialState = {
-  tasks: [
-    {id: 1, isCompleted: false, task: 'no park', date: new Date()},
-    {id: 2, isCompleted: false, task: 'Development', date: new Date()},
-    {id: 3, isCompleted: false, task: 'Exercise', date: new Date()},
-  ],
-  dailyTask: [],
+  tasks: [],
 };
 
-import {ADD_TASK, DELETE_TASK, UPDATE_TASK} from '../action/TaskActions';
+import {
+  ADD_TASK,
+  DELETE_TASK,
+  UPDATE_TASK,
+  COMPLETE_TASK,
+} from '../action/TaskActions';
 
 const taskReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TASK:
-      return state;
+      let newState = {...state};
+      newState.tasks.push({
+        id: state.length + 1,
+        isCompleted: false,
+        task: action.task.title,
+        date: new Date(),
+      });
+
+      return {...newState};
     case DELETE_TASK:
-      return state;
+      return {...state};
     case UPDATE_TASK:
-      return state;
+      return {...state};
+    case COMPLETE_TASK:
+      newState = {...state};
+      newState.tasks[action.id].isCompleted = !newState.tasks[action.id]
+        .isCompleted;
+
+      return {...newState};
     default:
       state;
   }
-  return state;
+  return {...state};
 };
 
 export default taskReducer;
