@@ -4,4 +4,5 @@ export default {
   statusBar: '#7047a3',
   main: '#7047a3',
   header: '#4D4365',
+  cancel: '#D1432E',
 };
