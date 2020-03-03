@@ -7,6 +7,8 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 
+import FormScreen from '../screens/FormScrren';
+
 import {HomeStackScreens, ProfileStackScreen} from './StackScreen';
 
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -34,7 +36,7 @@ function DrawerNavigator(props) {
     <>
       <Drawer.Navigator
         drawerContent={props => CustomDrawerContent(props)}
-        initialRouteName="Home"
+        // initialRouteName="Home"
         drawerType="slide"
         drawerStyle={{
           backgroundColor: '#fff', //drawer background color
@@ -49,6 +51,24 @@ function DrawerNavigator(props) {
             fontSize: 15,
           },
         }}>
+        <Drawer.Screen
+          name="From" // routing name
+          component={FormScreen} //screen name
+          options={{
+            title: 'Form',
+            drawerIcon: props => {
+              return (
+                <Text>
+                  <Entypo
+                    name="Form"
+                    size={23}
+                    color={props.focused ? '#7047a3' : 'black'}
+                  />
+                </Text>
+              );
+            },
+          }}
+        />
         <Drawer.Screen
           name="Home" // routing name
           component={HomeStackScreens} //screen name
