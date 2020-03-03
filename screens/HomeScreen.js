@@ -90,7 +90,7 @@ const HomeScreen = props => {
             ))}
           </ScrollView>
         </View>
-        <Divider style={{backgroundColor: 'black'}} />
+        {/* <Divider style={{backgroundColor: 'black'}} /> */}
 
         {/* create Task  */}
         <View
