@@ -36,7 +36,7 @@ function DrawerNavigator(props) {
     <>
       <Drawer.Navigator
         drawerContent={props => CustomDrawerContent(props)}
-        // initialRouteName="Home"
+        initialRouteName="Home"
         drawerType="slide"
         drawerStyle={{
           backgroundColor: '#fff', //drawer background color
@@ -51,8 +51,8 @@ function DrawerNavigator(props) {
             fontSize: 15,
           },
         }}>
-        <Drawer.Screen
-          name="From" // routing name
+        {/* <Drawer.Screen
+          // name="From" // routing name
           component={FormScreen} //screen name
           options={{
             title: 'Form',
@@ -68,7 +68,7 @@ function DrawerNavigator(props) {
               );
             },
           }}
-        />
+        /> */}
         <Drawer.Screen
           name="Home" // routing name
           component={HomeStackScreens} //screen name
