@@ -22,7 +22,7 @@ function CustomDrawerContent(props) {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image
             style={{height: 80, width: 80}}
-            source={require('../assets/images/logoOriginalTransparent.png')}
+            source={require('../assets/images/icon.png')}
           />
         </View>
       </View>

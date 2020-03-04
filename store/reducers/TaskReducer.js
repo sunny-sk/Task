@@ -22,7 +22,12 @@ const taskReducer = (state = initialState, action) => {
 
       return {...newState};
     case DELETE_TASK:
-      return {...state};
+      newState = {...state};
+
+      newState.tasks.splice(action.id, 1);
+      console.log(action.id);
+      console.log(newState);
+      return {...newState};
     case UPDATE_TASK:
       return {...state};
     case COMPLETE_TASK:

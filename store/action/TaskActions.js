@@ -13,5 +13,5 @@ export const completeTask = id => {
   return {type: COMPLETE_TASK, id: id};
 };
 export const deleteTask = id => {
-  return {type: DELETE_TASK, task: id};
+  return {type: DELETE_TASK, id: id};
 };

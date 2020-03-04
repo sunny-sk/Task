@@ -1,5 +1,12 @@
 import * as React from 'react';
-import {Button, TextInput, View, ActivityIndicator, Alert} from 'react-native';
+import {
+  Button,
+  TextInput,
+  View,
+  ActivityIndicator,
+  Text,
+  Alert,
+} from 'react-native';
 import Colors from '../constants/Color';
 
 import {useSelector, useDispatch} from 'react-redux';
@@ -24,19 +31,35 @@ function CreateTask(props) {
 
   return (
     <>
-      <TextInput
-        placeholder="title"
-        style={{padding: 10, backgroundColor: 'white'}}
-        value={title}
-        onChangeText={setTitle}
-      />
+      <View style={{marginHorizontal: 10, backgroundColor: '#fff'}}>
+        <View
+          style={{
+            width: '90%',
+            marginLeft: '5%',
+            marginTop: '20%',
+          }}>
+          {/* <Text style={{color: '#c6c6c6'}}>Title</Text> */}
+          <TextInput
+            placeholder="Title"
+            style={{
+              // borderWidth: 1,
+              marginTop: 1,
 
-      <View style={{marginVertical: 10}}>
-        {isLoading ? (
-          <ActivityIndicator size="small" color={Colors.primary} />
-        ) : null}
+              borderBottomWidth: 1,
+              borderBottomColor: '#c6c6c6',
+            }}
+            value={title}
+            onChangeText={setTitle}
+          />
+        </View>
+
+        <View style={{marginVertical: 10}}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={Colors.primary} />
+          ) : null}
+        </View>
+        <Button title="Add Task" onPress={onAddTask} />
       </View>
-      <Button title="Add Task" onPress={onAddTask} />
     </>
   );
 }

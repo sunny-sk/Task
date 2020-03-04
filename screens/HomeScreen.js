@@ -7,15 +7,17 @@ import {
   Text,
   Switch,
   Button,
+  TouchableNativeFeedback,
 } from 'react-native';
 import {CheckBox, Divider} from 'react-native-elements';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../constants/Color';
 
 import {useSelector, useDispatch} from 'react-redux';
-import {completeTask} from '../store/action/TaskActions';
+import {completeTask, deleteTask} from '../store/action/TaskActions';
 
 const HomeScreen = props => {
   const [tasks, setTasks] = useState([]);
@@ -30,6 +32,15 @@ const HomeScreen = props => {
 
   const onCompleteTask = id => {
     dispatch(completeTask(id));
+  };
+
+  const onCreateTask = () => {
+    console.log('clicked');
+    const {navigation} = props;
+    navigation.navigate('CreateTask');
+  };
+  const onDeleteTask = id => {
+    dispatch(deleteTask(id));
   };
 
   props.navigation.setOptions({
@@ -68,10 +79,19 @@ const HomeScreen = props => {
                 <View
                   style={{
                     padding: 10,
-                    width: '80%',
+                    width: '70%',
                     justifyContent: 'center',
                   }}>
                   <Text style={{textAlign: 'center'}}>{task.task}</Text>
+                </View>
+                <View style={{justifyContent: 'center'}}>
+                  <TouchableOpacity onPress={onDeleteTask.bind(this, index)}>
+                    <MaterialCommunityIcons
+                      name="delete-sweep-outline"
+                      size={25}
+                      color="#C50707"
+                    />
+                  </TouchableOpacity>
                 </View>
                 <View style={{width: '20%'}}>
                   <CheckBox
@@ -92,29 +112,33 @@ const HomeScreen = props => {
         </View>
         {/* <Divider style={{backgroundColor: 'black'}} /> */}
 
-        {/* create Task  */}
+        {/* create Task button  */}
+
         <View
           style={{
-            backgroundColor: Colors.main,
-            height: 50,
-            width: 50,
-            borderRadius: 50,
+            overflow: 'hidden',
             position: 'absolute',
             bottom: 40,
             right: '10%',
-            justifyContent: 'center',
+            borderRadius: 50,
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              props.navigation.navigate('CreateTask');
-            }}>
-            <Text
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple('#000000', false)}
+            onPress={onCreateTask}>
+            <View
               style={{
-                textAlign: 'center',
+                backgroundColor: Colors.main,
+                borderRadius: 50,
+                padding: 10,
               }}>
-              <AntDesign name="plus" size={30} color="#fff" />
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  textAlign: 'center',
+                }}>
+                <AntDesign name="plus" size={30} color="#fff" />
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
         </View>
       </View>
     </>

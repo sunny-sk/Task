@@ -1,6 +1,6 @@
-import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {Text} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../screens/HomeScreen';
 import CreateTaskScreen from '../screens/CreateTaskScreen';
@@ -13,7 +13,11 @@ const ProfileStack = createStackNavigator();
 
 export function HomeStackScreens() {
   return (
-    <HomeStack.Navigator keyboardHandlingEnabled={false}>
+    <HomeStack.Navigator
+      headerMode="screen"
+      mode="modal"
+      options={{}}
+      keyboardHandlingEnabled={false}>
       <HomeStack.Screen
         name="Home" //use to navigate routeName
         component={HomeScreen}
@@ -34,11 +38,17 @@ export function HomeStackScreens() {
         name="CreateTask"
         component={CreateTaskScreen}
         options={{
-          headerTitle: props => (
-            <Text>
-              <Entypo name="edit" />
-            </Text>
-          ),
+          headerStyle: {
+            backgroundColor: '#7047a3',
+          },
+          // headerTitle: props => (
+          //   <Text>
+          //     <Entypo name="edit" />
+          //   </Text>
+          // ),
+          title: 'Create Task',
+          headerTitleAlign: 'center',
+          headerTintColor: '#fff',
         }}
       />
     </HomeStack.Navigator>
