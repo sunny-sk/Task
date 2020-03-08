@@ -12,6 +12,8 @@ import Colors from '../constants/Color';
 import {useSelector, useDispatch} from 'react-redux';
 import {addTask} from '../store/action/TaskActions';
 
+import Buttons from '../components/button';
+
 function CreateTask(props) {
   const [title, setTitle] = React.useState('');
   const [data, setData] = React.useState('');
@@ -58,7 +60,20 @@ function CreateTask(props) {
             <ActivityIndicator size="small" color={Colors.primary} />
           ) : null}
         </View>
-        <Button title="Add Task" onPress={onAddTask} />
+        <View style={{width: '60%', marginLeft: '20%'}}>
+          <Buttons
+            click={onAddTask}
+            style={{
+              color: 'white',
+              backgroundColor: Colors.Dazzy.primary,
+              paddingHorizontal: 6,
+              paddingVertical: 8,
+            }}
+            ripple="#fff"
+            {...props}>
+            ADD
+          </Buttons>
+        </View>
       </View>
     </>
   );

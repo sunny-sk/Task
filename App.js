@@ -1,6 +1,6 @@
 import React from 'react';
 import {StatusBar} from 'react-native';
-
+import Colors from './constants/Color';
 import DrawerNavigator from './navigation/DrawerNavigator';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
@@ -20,7 +20,7 @@ const App = () => {
   console.log('in app.js');
   return (
     <>
-      <StatusBar backgroundColor="#7047a3" />
+      <StatusBar backgroundColor={Colors.primary} />
       <Provider store={store}>
         <SafeAreaProvider>
           <NavigationContainer>

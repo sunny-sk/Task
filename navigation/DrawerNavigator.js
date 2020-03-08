@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/drawer';
 
 import FormScreen from '../screens/FormScrren';
-
+import Colors from '../constants/Color';
 import {HomeStackScreens, ProfileStackScreen} from './StackScreen';
 
 import Entypo from 'react-native-vector-icons/Entypo';

@@ -1,5 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
+import Colors from '../constants/Color';
+
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../screens/HomeScreen';
@@ -24,7 +26,7 @@ export function HomeStackScreens() {
         options={{
           title: 'Tasks', //change title and higher periority then the name
           headerStyle: {
-            backgroundColor: '#7047a3',
+            backgroundColor: Colors.primary,
           },
           headerTintColor: '#fff',
           headerTitleAlign: 'center', // make header title on center,
@@ -39,7 +41,7 @@ export function HomeStackScreens() {
         component={CreateTaskScreen}
         options={{
           headerStyle: {
-            backgroundColor: '#7047a3',
+            backgroundColor: Colors.primary,
           },
           // headerTitle: props => (
           //   <Text>
@@ -69,7 +71,7 @@ export function ProfileStackScreen() {
           ),
 
           headerStyle: {
-            backgroundColor: '#7047a3',
+            backgroundColor: Colors.primary,
           },
           headerTintColor: '#fff',
           headerTitleAlign: 'center', // make header title on center,
