@@ -7,26 +7,30 @@ import {
   DELETE_TASK,
   UPDATE_TASK,
   COMPLETE_TASK,
+  GET_TASKS,
 } from '../action/TaskActions';
 
 const taskReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_TASK:
+    case GET_TASKS:
       let newState = {...state};
-      newState.tasks.push({
-        id: state.length + 1,
-        isCompleted: false,
-        task: action.task.title,
-        date: new Date(),
-      });
-
+      newState.tasks = [...action.tasks];
+      return {...newState};
+    case ADD_TASK:
+      newState = {...state};
+      console.log(action.task);
+      newState.tasks.push({...action.task});
       return {...newState};
     case DELETE_TASK:
       newState = {...state};
-
-      newState.tasks.splice(action.id, 1);
-      console.log(action.id);
-      console.log(newState);
+      let foundIndex;
+      newState.tasks.forEach((task, index) => {
+        if (task.id === action.id) {
+          foundIndex = index;
+          return;
+        }
+      });
+      newState.tasks.splice(foundIndex, 1);
       return {...newState};
     case UPDATE_TASK:
       return {...state};
