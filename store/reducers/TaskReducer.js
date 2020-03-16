@@ -36,9 +36,11 @@ const taskReducer = (state = initialState, action) => {
       return {...state};
     case COMPLETE_TASK:
       newState = {...state};
-      newState.tasks[action.id].isCompleted = !newState.tasks[action.id]
-        .isCompleted;
-
+      newState.tasks.forEach(task => {
+        if (task.id === action.id) {
+          task.isCompleted = true;
+        }
+      });
       return {...newState};
     default:
       state;

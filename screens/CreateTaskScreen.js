@@ -14,6 +14,7 @@ import Colors from '../constants/Color';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {addTask} from '../store/action/TaskActions';
+import Snackbar from 'react-native-snackbar';
 
 import Buttons from '../components/button';
 
@@ -23,19 +24,31 @@ function CreateTask(props) {
   const [isLoading, setIsLoading] = React.useState(false);
   const dispatch = useDispatch();
 
-  const onAddTask = () => {
-    if (title === '' && data === '') {
-      Alert.alert('Warning', 'Please fill all fields');
-      return;
-    }
-    Keyboard.dismiss();
-    console.log('onAdd post clicked');
-    setIsLoading(true);
-    setTimeout(() => {
-      dispatch(addTask({title: title}));
+  const onAddTask = async () => {
+    try {
+      if (title === '' && data === '') {
+        Alert.alert('Warning', 'Please fill all fields');
+        return;
+      }
+      Keyboard.dismiss();
+      setIsLoading(true);
+      await dispatch(addTask({title: title}));
       setIsLoading(false);
       props.navigation.goBack();
-    });
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error.message);
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: Colors.cancel,
+        action: {
+          text: 'try again',
+          textColor: '#fff',
+          onPress: () => {},
+        },
+      });
+    }
   };
 
   return (
@@ -67,29 +80,30 @@ function CreateTask(props) {
             />
           </View>
 
-          <View style={{marginVertical: 10}}>
+          <View style={{marginTop: 30}}>
             {isLoading ? (
-              <ActivityIndicator size="small" color={Colors.primary} />
-            ) : null}
+              <View style={{marginVertical: 10}}>
+                <ActivityIndicator size="small" color={Colors.primary} />
+              </View>
+            ) : (
+              <View style={{width: '60%', marginLeft: '20%'}}>
+                <Buttons
+                  click={() => {
+                    onAddTask();
+                  }}
+                  style={{
+                    color: 'white',
+                    backgroundColor: Colors.Dazzy.primary,
+                    paddingHorizontal: 6,
+                    paddingVertical: 8,
+                  }}
+                  ripple="#fff"
+                  {...props}>
+                  ADD
+                </Buttons>
+              </View>
+            )}
           </View>
-          {!isLoading ? (
-            <View style={{width: '60%', marginLeft: '20%'}}>
-              <Buttons
-                click={() => {
-                  onAddTask();
-                }}
-                style={{
-                  color: 'white',
-                  backgroundColor: Colors.Dazzy.primary,
-                  paddingHorizontal: 6,
-                  paddingVertical: 8,
-                }}
-                ripple="#fff"
-                {...props}>
-                ADD
-              </Buttons>
-            </View>
-          ) : null}
         </View>
       </TouchableWithoutFeedback>
     </>

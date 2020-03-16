@@ -3,37 +3,82 @@ export const UPDATE_TASK = 'UPDATE_TASK';
 export const DELETE_TASK = 'DELETE_TASK';
 export const COMPLETE_TASK = 'COMPLETE_TASK';
 export const GET_TASKS = 'GET_TASKS';
-
 import {URL} from 'react-native-dotenv';
 
 import axios from 'axios';
 
 export const addTask = task => {
   return async dispatch => {
-    const payload = {
-      title: task.title,
-      isCompleted: false,
-      date: new Date(),
-    };
-    const result = await axios.post(URL, payload, {
-      headers: {
-        'Content-type': 'application/json',
-      },
-    });
+    try {
+      const payload = {
+        title: task.title,
+        isCompleted: false,
+        date: new Date(),
+      };
+      const result = await axios.post(
+        'https://task-smart.firebaseio.com/task.json',
+        payload,
+        {
+          headers: {
+            'Content-type': 'application/json',
+          },
+        },
+      );
 
-    payload.id = result.data.name;
-    dispatch({type: ADD_TASK, task: payload});
+      payload.id = result.data.name;
+      dispatch({type: ADD_TASK, task: payload});
+    } catch (error) {
+      throw new Error('Something went wrong');
+    }
   };
 };
+
 export const updateTask = task => {
   return {type: UPDATE_TASK, task: task};
 };
-export const completeTask = id => {
-  return {type: COMPLETE_TASK, id: id};
+export const completeTask = task => {
+  return async dispatch => {
+    try {
+      const result = await axios.put(
+        `https://task-smart.firebaseio.com/task/${task.id}.json`,
+        {
+          isCompleted: true,
+          date: task.date,
+          title: task.title,
+        },
+        {
+          headers: {
+            'Content-type': 'application/json',
+          },
+        },
+      );
+      console.log(result.data);
+      dispatch({type: COMPLETE_TASK, id: task.id, updatedTask: result.data});
+    } catch (error) {
+      throw new Error('server error');
+    }
+  };
 };
 export const deleteTask = id => {
-  return {type: DELETE_TASK, id: id};
+  // return async dispatch => {
+  //   try {
+  //     const result = await axios.delete(
+  //       'https://task-smart.firebaseio.com/task.json',
+  //       {},
+  //       {
+  //         headers: {
+  //           'Content-type': 'application/json',
+  //         },
+  //       },
+  //     );
+  //     console.log(result);
+  //     return {type: DELETE_TASK, id: id};
+  //   } catch (error) {
+  //     throw new Error('server error');
+  //   }
+  // };
 };
+
 export const getTasks = () => {
   return async dispatch => {
     try {
@@ -46,7 +91,6 @@ export const getTasks = () => {
         },
       );
 
-      console.log(result.data);
       const loadedTask = [];
       for (const key in result.data) {
         loadedTask.push({

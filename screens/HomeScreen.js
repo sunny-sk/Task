@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import {
   TouchableOpacity,
@@ -27,44 +27,58 @@ const HomeScreen = props => {
   const availableData = useSelector(state => {
     return state.tasks;
   });
-
   const dispatch = useDispatch();
-  useEffect(() => {
-    setTasks([...availableData.tasks]);
-  }, [availableData]);
 
   useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        setPrevTaskFetchLoading(true);
-        await dispatch(getTasks());
-        setPrevTaskFetchLoading(false);
-      } catch (error) {
-        setPrevTaskFetchLoading(false);
-        Snackbar.show({
-          text: error.message,
-          duration: Snackbar.LENGTH_SHORT,
-          backgroundColor: Colors.cancel,
-          action: {
-            text: 'try again',
-            textColor: '#fff',
-            onPress: () => {
-              /* Do something. */
-            },
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      // Screen was focused
+      console.log('Home screen screen focused');
+      // load tasks
+      loadTasks();
+    });
+
+    return unsubscribe;
+  }, [loadTasks]);
+
+  useEffect(() => {
+    console.log('load');
+    setTasks([...availableData.tasks]);
+  }, [dispatch, availableData]);
+
+  //@desc load task
+  const loadTasks = async () => {
+    console.log('task Loading p ik');
+    try {
+      setPrevTaskFetchLoading(true);
+      await dispatch(getTasks());
+      setPrevTaskFetchLoading(false);
+    } catch (error) {
+      setPrevTaskFetchLoading(false);
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_LONG,
+        backgroundColor: Colors.cancel,
+        action: {
+          text: 'try again',
+          textColor: '#fff',
+          onPress: () => {
+            loadTasks();
           },
-        });
-      }
-    };
-    loadTasks();
-  }, [dispatch]);
+        },
+      });
+    }
+  };
 
   //@desc complete task
-  const onCompleteTask = id => {
-    setIsLoading(true);
-    setTimeout(() => {
-      dispatch(completeTask(id));
+  const onCompleteTask = async task => {
+    console.log('on task complete');
+    try {
+      setIsLoading(true);
+      await dispatch(completeTask(task));
       setIsLoading(false);
-    }, 1000);
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
 
   //@desc navigate to create task screen
@@ -111,6 +125,7 @@ const HomeScreen = props => {
       );
     },
   });
+
   return (
     <>
       <View style={{padding: 10, height: '100%'}}>
@@ -178,7 +193,7 @@ const HomeScreen = props => {
                       <View style={{width: '20%'}}>
                         <CheckBox
                           onPress={() => {
-                            onCompleteTask(index);
+                            onCompleteTask(task);
                           }}
                           style={{backgroundColor: 'white'}}
                           center
