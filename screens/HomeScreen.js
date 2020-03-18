@@ -8,17 +8,25 @@ import {
   TouchableNativeFeedback,
   ActivityIndicator,
   Alert,
+  StyleSheet,
+  Modal,
+  TouchableHighlight,
 } from 'react-native';
 import {CheckBox, Divider} from 'react-native-elements';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Color';
-import Snackbar from 'react-native-snackbar';
-
+import customSnackBar from '../components/snackbar';
 import {useSelector, useDispatch} from 'react-redux';
-import {completeTask, deleteTask, getTasks} from '../store/action/TaskActions';
+import {
+  completeTask,
+  deleteTask,
+  addTask,
+  getTasks,
+} from '../store/action/TaskActions';
 
 const HomeScreen = props => {
   const [tasks, setTasks] = useState([]);
@@ -47,25 +55,14 @@ const HomeScreen = props => {
 
   //@desc load task
   const loadTasks = async () => {
-    console.log('task Loading p ik');
+    console.log('task Loading');
     try {
       setPrevTaskFetchLoading(true);
       await dispatch(getTasks());
       setPrevTaskFetchLoading(false);
     } catch (error) {
       setPrevTaskFetchLoading(false);
-      Snackbar.show({
-        text: error.message,
-        duration: Snackbar.LENGTH_LONG,
-        backgroundColor: Colors.cancel,
-        action: {
-          text: 'try again',
-          textColor: '#fff',
-          onPress: () => {
-            loadTasks();
-          },
-        },
-      });
+      customSnackBar.errorBar(loadTasks, error);
     }
   };
 
@@ -87,13 +84,38 @@ const HomeScreen = props => {
     navigation.navigate('CreateTask');
   };
 
-  //@desc delete task
-  const onDeleteTask = task => {
-    setIsLoading(true);
-    setTimeout(() => {
-      dispatch(deleteTask(task.id));
+  //@ undo deleted task
+  const undoDeletedTask = async task => {
+    try {
+      setIsLoading(true);
+      await dispatch(addTask(task));
       setIsLoading(false);
-    }, 2000);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error.message);
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: Colors.cancel,
+        action: {
+          text: 'try again',
+          textColor: '#fff',
+          onPress: () => {},
+        },
+      });
+    }
+  };
+
+  //@desc delete task
+  const onDeleteTask = async task => {
+    try {
+      setIsLoading(true);
+      await dispatch(deleteTask(task));
+      setIsLoading(false);
+      customSnackBar.undoBar(undoDeletedTask, task);
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
 
   props.navigation.setOptions({
@@ -109,21 +131,21 @@ const HomeScreen = props => {
       );
     },
 
-    headerRight: () => {
-      return !isLoading ? (
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.toggleDrawer();
-          }}
-          style={{marginRight: 10}}>
-          <AntDesign name="notification" size={25} color={'white'} />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={{marginRight: 15}}>
-          <ActivityIndicator size="small" color="#fff" />
-        </TouchableOpacity>
-      );
-    },
+    // headerRight: () => {
+    //   return !isLoading ? (
+    //     <TouchableOpacity
+    //       style={{marginRight: 20}}
+    //       onPress={() => {
+    //         setShowModal(true);
+    //       }}>
+    //       <Ionicons name="ios-options" size={25} color={'white'} />
+    //     </TouchableOpacity>
+    //   ) : (
+    //     <TouchableOpacity style={{marginRight: 15}}>
+    //       <ActivityIndicator size="small" color="#fff" />
+    //     </TouchableOpacity>
+    //   );
+    // },
   });
 
   return (
@@ -141,73 +163,78 @@ const HomeScreen = props => {
                 style={{
                   textAlign: 'center',
                   fontWeight: 'bold',
+                  fontSize: 18,
                   marginTop: '20%',
                 }}>
                 No Task found
               </Text>
             ) : (
-              <ScrollView>
-                {tasks.map((task, index) => {
-                  return (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        borderWidth: 1,
-                        borderColor: '#c6c6c6',
-                        borderRadius: 3,
-                        marginBottom: 5,
-                      }}
-                      key={index}>
+              <View style={{height: '95%'}}>
+                <ScrollView>
+                  {tasks.map((task, index) => {
+                    return (
                       <View
                         style={{
-                          padding: 10,
-                          width: '70%',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={{textAlign: 'center'}}>{task.title}</Text>
-                      </View>
-                      <View style={{justifyContent: 'center'}}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            Alert.alert('', 'are you sure', [
-                              {
-                                text: 'Cancel',
-                                onPress: () => console.log('Cancel Pressed'),
-                                style: 'cancel',
-                              },
-                              {
-                                text: 'OK',
-                                onPress: () => {
-                                  onDeleteTask(task);
-                                },
-                              },
-                            ]);
+                          flexDirection: 'row',
+                          borderWidth: 1,
+                          borderColor: '#c6c6c6',
+                          borderRadius: 3,
+                          marginBottom: 5,
+                        }}
+                        key={index}>
+                        <View
+                          style={{
+                            padding: 10,
+                            width: '70%',
+                            justifyContent: 'center',
                           }}>
-                          <MaterialCommunityIcons
-                            name="delete-sweep-outline"
-                            size={25}
-                            color="#C50707"
+                          <Text style={{textAlign: 'center'}}>
+                            {task.title}
+                          </Text>
+                        </View>
+                        <View style={{justifyContent: 'center'}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              Alert.alert('', 'are you sure', [
+                                {
+                                  text: 'Cancel',
+                                  onPress: () => console.log('Cancel Pressed'),
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: 'OK',
+                                  onPress: () => {
+                                    onDeleteTask(task);
+                                  },
+                                },
+                              ]);
+                            }}>
+                            <MaterialCommunityIcons
+                              name="delete-sweep-outline"
+                              size={25}
+                              color="#C50707"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={{width: '20%'}}>
+                          <CheckBox
+                            onPress={() => {
+                              onCompleteTask(task);
+                            }}
+                            style={{backgroundColor: 'white'}}
+                            center
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checked={task.isCompleted}
+                            checkedColor={'green'}
+                            uncheckedColor={Colors.cancel}
                           />
-                        </TouchableOpacity>
+                        </View>
                       </View>
-                      <View style={{width: '20%'}}>
-                        <CheckBox
-                          onPress={() => {
-                            onCompleteTask(task);
-                          }}
-                          style={{backgroundColor: 'white'}}
-                          center
-                          checkedIcon="dot-circle-o"
-                          uncheckedIcon="circle-o"
-                          checked={task.isCompleted}
-                          checkedColor={'green'}
-                          uncheckedColor={Colors.cancel}
-                        />
-                      </View>
-                    </View>
-                  );
-                })}
-              </ScrollView>
+                    );
+                  })}
+                </ScrollView>
+              </View>
             )}
           </View>
         )}
@@ -219,7 +246,7 @@ const HomeScreen = props => {
           style={{
             overflow: 'hidden',
             position: 'absolute',
-            bottom: 40,
+            bottom: 20,
             right: '10%',
             borderRadius: 50,
           }}>
@@ -245,5 +272,7 @@ const HomeScreen = props => {
     </>
   );
 };
+
+const styles = StyleSheet.create({});
 
 export default HomeScreen;

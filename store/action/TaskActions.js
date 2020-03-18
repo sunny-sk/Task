@@ -13,7 +13,7 @@ export const addTask = task => {
       const payload = {
         title: task.title,
         isCompleted: false,
-        date: new Date(),
+        date: task.date ? task.date : new Date(),
       };
       const result = await axios.post(
         'https://task-smart.firebaseio.com/task.json',
@@ -59,24 +59,19 @@ export const completeTask = task => {
     }
   };
 };
-export const deleteTask = id => {
-  // return async dispatch => {
-  //   try {
-  //     const result = await axios.delete(
-  //       'https://task-smart.firebaseio.com/task.json',
-  //       {},
-  //       {
-  //         headers: {
-  //           'Content-type': 'application/json',
-  //         },
-  //       },
-  //     );
-  //     console.log(result);
-  //     return {type: DELETE_TASK, id: id};
-  //   } catch (error) {
-  //     throw new Error('server error');
-  //   }
-  // };
+export const deleteTask = task => {
+  return async dispatch => {
+    try {
+      const result = await axios.delete(
+        `https://task-smart.firebaseio.com/task/${task.id}.json`,
+      );
+
+      dispatch({type: DELETE_TASK, id: task.id});
+    } catch (error) {
+      console.log(error);
+      throw new Error('server error');
+    }
+  };
 };
 
 export const getTasks = () => {

@@ -7,14 +7,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {Provider} from 'react-redux';
-import taskReducers from './store/reducers/TaskReducer';
 import ReduxThunk from 'redux-thunk';
+import taskReducers from './store/reducers/TaskReducer';
+import authReducers from './store/reducers/AuthReducers';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 
 enableScreens();
 const App = () => {
   const rootReducer = combineReducers({
     tasks: taskReducers,
+    auth: authReducers,
   });
   const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
   console.log('in app.js');
