@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image} from 'react-native';
 
 import {
@@ -10,7 +10,7 @@ import {
 import FormScreen from '../screens/FormScrren';
 import Colors from '../constants/Color';
 import {HomeStackScreens, ProfileStackScreen} from './StackScreen';
-
+import SplashScreen from 'react-native-splash-screen';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 const Drawer = createDrawerNavigator();

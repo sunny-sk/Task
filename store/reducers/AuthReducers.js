@@ -24,7 +24,7 @@ const authReducer = (state = initialState, action) => {
     case FORGOT_PASSWORD:
       newState = {...state};
 
-      newState.tasks.splice(foundIndex, 1);
+      // newState.tasks.splice(foundIndex, 1);
       return {...newState};
     case ALREADY_LOGIN:
       return {...state};

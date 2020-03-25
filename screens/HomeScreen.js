@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
+  StatusBar,
   Modal,
   TouchableHighlight,
 } from 'react-native';
@@ -18,9 +19,11 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import Colors from '../constants/Color';
 import customSnackBar from '../components/snackbar';
 import {useSelector, useDispatch} from 'react-redux';
+
 import {
   completeTask,
   deleteTask,
@@ -38,6 +41,10 @@ const HomeScreen = props => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    loadTasks();
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
       // Screen was focused
       console.log('Home screen screen focused');
@@ -51,7 +58,7 @@ const HomeScreen = props => {
   useEffect(() => {
     console.log('load');
     setTasks([...availableData.tasks]);
-  }, [dispatch, availableData]);
+  }, [availableData]);
 
   //@desc load task
   const loadTasks = async () => {
@@ -131,21 +138,26 @@ const HomeScreen = props => {
       );
     },
 
-    // headerRight: () => {
-    //   return !isLoading ? (
-    //     <TouchableOpacity
-    //       style={{marginRight: 20}}
-    //       onPress={() => {
-    //         setShowModal(true);
-    //       }}>
-    //       <Ionicons name="ios-options" size={25} color={'white'} />
-    //     </TouchableOpacity>
-    //   ) : (
-    //     <TouchableOpacity style={{marginRight: 15}}>
-    //       <ActivityIndicator size="small" color="#fff" />
-    //     </TouchableOpacity>
-    //   );
-    // },
+    headerRight: () => {
+      return isLoading ? (
+        <TouchableOpacity style={{marginRight: 15}}>
+          <ActivityIndicator size="small" color="#fff" />
+        </TouchableOpacity>
+      ) : null;
+      // return !isLoading ? (
+      //   <TouchableOpacity
+      //     style={{marginRight: 20}}
+      //     onPress={() => {
+      //       setShowModal(true);
+      //     }}>
+      //     <Ionicons name="ios-options" size={25} color={'white'} />
+      //   </TouchableOpacity>
+      // ) : (
+      //   <TouchableOpacity style={{marginRight: 15}}>
+      //     <ActivityIndicator size="small" color="#fff" />
+      //   </TouchableOpacity>
+      // );
+    },
   });
 
   return (

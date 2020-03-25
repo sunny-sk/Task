@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   TextInput,
   View,
   ActivityIndicator,
   Text,
+  StyleSheet,
   Alert,
   Keyboard,
   TouchableNativeFeedback,
@@ -20,13 +21,17 @@ import Buttons from '../components/button';
 
 function CreateTask(props) {
   const [title, setTitle] = React.useState('');
-  const [data, setData] = React.useState('');
+  let Input = React.createRef();
+
+  useEffect(() => {
+    Input.focus();
+  }, []);
+
   const [isLoading, setIsLoading] = React.useState(false);
   const dispatch = useDispatch();
-
   const onAddTask = async () => {
     try {
-      if (title === '' && data === '') {
+      if (title === '') {
         Alert.alert('Warning', 'Please fill all fields');
         return;
       }
@@ -37,7 +42,6 @@ function CreateTask(props) {
       props.navigation.goBack();
     } catch (error) {
       setIsLoading(false);
-      console.log(error.message);
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
@@ -57,24 +61,14 @@ function CreateTask(props) {
         onPress={() => {
           Keyboard.dismiss();
         }}>
-        <View
-          style={{
-            marginTop: 10,
-            height: '100%',
-            backgroundColor: '#fff',
-          }}>
-          <View
-            style={{
-              width: '90%',
-              marginLeft: '5%',
-            }}>
+        <View style={styles.screen}>
+          <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Title"
-              style={{
-                marginTop: 30,
-                borderBottomWidth: 1,
-                borderBottomColor: '#c6c6c6',
+              ref={ref => {
+                Input = ref;
               }}
+              placeholder="Title"
+              style={styles.inputStyle}
               value={title}
               onChangeText={setTitle}
             />
@@ -86,7 +80,7 @@ function CreateTask(props) {
                 <ActivityIndicator size="small" color={Colors.primary} />
               </View>
             ) : (
-              <View style={{width: '60%', marginLeft: '20%'}}>
+              <View style={styles.btnContainer}>
                 <Buttons
                   click={() => {
                     onAddTask();
@@ -111,3 +105,23 @@ function CreateTask(props) {
 }
 
 export default CreateTask;
+const styles = StyleSheet.create({
+  screen: {
+    marginTop: 10,
+    height: '100%',
+    backgroundColor: '#fff',
+  },
+  inputContainer: {
+    width: '90%',
+    marginLeft: '5%',
+  },
+  inputStyle: {
+    marginTop: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: '#c6c6c6',
+  },
+  btnContainer: {
+    width: '60%',
+    marginLeft: '20%',
+  },
+});

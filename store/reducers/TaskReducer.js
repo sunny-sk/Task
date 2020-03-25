@@ -13,35 +13,28 @@ import {
 const taskReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_TASKS:
-      let newState = {...state};
-      newState.tasks = [...action.tasks];
-      return {...newState};
+      let newTaskState = {...state};
+      newTaskState.tasks = [...action.tasks];
+      return {...newTaskState};
     case ADD_TASK:
-      newState = {...state};
-      console.log(action.task);
-      newState.tasks.push({...action.task});
-      return {...newState};
+      newTaskState = {...state};
+      newTaskState.tasks.push({...action.task});
+      return {...newTaskState};
     case DELETE_TASK:
-      newState = {...state};
-      let foundIndex;
-      newState.tasks.forEach((task, index) => {
-        if (task.id === action.id) {
-          foundIndex = index;
-          return;
-        }
-      });
-      newState.tasks.splice(foundIndex, 1);
-      return {...newState};
+      newTaskState = {...state};
+      let tasks = newTaskState.tasks.filter(task => task.id !== action.id);
+      newTaskState.tasks = [...tasks];
+      return {...newTaskState};
     case UPDATE_TASK:
       return {...state};
     case COMPLETE_TASK:
-      newState = {...state};
-      newState.tasks.forEach(task => {
+      newTaskState = {...state};
+      newTaskState.tasks.forEach(task => {
         if (task.id === action.id) {
           task.isCompleted = true;
         }
       });
-      return {...newState};
+      return {...newTaskState};
     default:
       state;
   }

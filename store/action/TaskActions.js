@@ -28,7 +28,11 @@ export const addTask = task => {
       payload.id = result.data.name;
       dispatch({type: ADD_TASK, task: payload});
     } catch (error) {
-      throw new Error('Something went wrong');
+      if (error.message === 'Network Error') {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Something went wrong');
+      }
     }
   };
 };
@@ -65,7 +69,6 @@ export const deleteTask = task => {
       const result = await axios.delete(
         `https://task-smart.firebaseio.com/task/${task.id}.json`,
       );
-
       dispatch({type: DELETE_TASK, id: task.id});
     } catch (error) {
       console.log(error);
@@ -85,7 +88,7 @@ export const getTasks = () => {
           },
         },
       );
-
+      // console.log(result.data);
       const loadedTask = [];
       for (const key in result.data) {
         loadedTask.push({
