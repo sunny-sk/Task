@@ -9,17 +9,13 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
-  StatusBar,
-  Modal,
-  TouchableHighlight,
 } from 'react-native';
 import {CheckBox, Divider} from 'react-native-elements';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
+
 import Colors from '../constants/Color';
 import customSnackBar from '../components/snackbar';
 import {useSelector, useDispatch} from 'react-redux';
@@ -31,18 +27,29 @@ import {
   getTasks,
 } from '../store/action/TaskActions';
 
+import {logout} from '../store/action/AuthActions';
+
 const HomeScreen = props => {
   const [tasks, setTasks] = useState([]);
+  const [auth, setAuth] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [prevTaskFetchLoading, setPrevTaskFetchLoading] = useState(false);
   const availableData = useSelector(state => {
     return state.tasks;
+  });
+  const authData = useSelector(state => {
+    return state.auth;
   });
   const dispatch = useDispatch();
 
   useEffect(() => {
     loadTasks();
   }, []);
+
+  const t = async () => {
+    x = await AsyncStorage.getItem('userData');
+    console.log('Zsd', x);
+  };
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {
@@ -59,6 +66,11 @@ const HomeScreen = props => {
     console.log('load');
     setTasks([...availableData.tasks]);
   }, [availableData]);
+
+  useEffect(() => {
+    console.log('checking authData');
+    setAuth({...authData});
+  }, [authData]);
 
   //@desc load task
   const loadTasks = async () => {
@@ -82,6 +94,7 @@ const HomeScreen = props => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      customSnackBar.errorBar(null, error);
     }
   };
 
@@ -122,6 +135,7 @@ const HomeScreen = props => {
       customSnackBar.undoBar(undoDeletedTask, task);
     } catch (error) {
       setIsLoading(false);
+      customSnackBar.errorBar(null, error);
     }
   };
 
@@ -139,11 +153,44 @@ const HomeScreen = props => {
     },
 
     headerRight: () => {
-      return isLoading ? (
-        <TouchableOpacity style={{marginRight: 15}}>
-          <ActivityIndicator size="small" color="#fff" />
-        </TouchableOpacity>
-      ) : null;
+      if (isLoading) {
+        return (
+          <TouchableOpacity style={{marginRight: 15}}>
+            <ActivityIndicator size="small" color="#fff" />
+          </TouchableOpacity>
+        );
+      } else if (auth.email) {
+        return (
+          <TouchableOpacity
+            style={{marginRight: 20}}
+            onPress={() => {
+              Alert.alert(
+                'Logout',
+                'are you sure',
+                [
+                  {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      console.log('OK Pressed');
+                      dispatch(logout());
+                    },
+                  },
+                ],
+                {cancelable: false},
+              );
+            }}>
+            <AntDesign name="user" size={25} color={'white'} />
+          </TouchableOpacity>
+        );
+      } else {
+        return null;
+      }
+
       // return !isLoading ? (
       //   <TouchableOpacity
       //     style={{marginRight: 20}}

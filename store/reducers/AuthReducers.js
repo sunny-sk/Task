@@ -1,33 +1,37 @@
 const initialState = {
-  data: {},
-  loggedIn: false,
+  token: null,
+  userId: null,
+  email: null,
 };
 
-import {
-  ALREADY_LOGIN,
-  FORGOT_PASSWORD,
-  LOGIN,
-  REGISTER,
-} from '../action/AuthActions';
+import {LOGIN, REGISTER, AUTHENTICATE, LOGOUT} from '../action/AuthActions';
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN:
-      let newState = {...state};
-
-      return {...newState};
+      let authState = {...state};
+      authState.token = action.token;
+      authState.userId = action.userId;
+      authState.email = action.email;
+      return {...authState};
     case REGISTER:
-      newState = {...state};
-
-      newState.tasks.push({...action.task});
-      return {...newState};
-    case FORGOT_PASSWORD:
-      newState = {...state};
-
-      // newState.tasks.splice(foundIndex, 1);
-      return {...newState};
-    case ALREADY_LOGIN:
-      return {...state};
+      authState = {...state};
+      authState.token = action.token;
+      authState.userId = action.userId;
+      authState.email = action.email;
+      return {...authState};
+    case AUTHENTICATE:
+      authState = {...state};
+      authState.token = action.data.token;
+      authState.userId = action.data.userId;
+      authState.email = action.data.email;
+      return {...authState};
+    case LOGOUT:
+      authState = {...state};
+      authState.token = null;
+      authState.userId = null;
+      authState.email = null;
+      return {...authState};
     default:
       state;
   }

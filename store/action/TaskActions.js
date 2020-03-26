@@ -8,15 +8,16 @@ import {URL} from 'react-native-dotenv';
 import axios from 'axios';
 
 export const addTask = task => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
       const payload = {
         title: task.title,
         isCompleted: false,
         date: task.date ? task.date : new Date(),
       };
+      const token = getState().auth.token;
       const result = await axios.post(
-        'https://task-smart.firebaseio.com/task.json',
+        `https://smart-task-6d705.firebaseio.com/task.json?auth=${token}`,
         payload,
         {
           headers: {
@@ -41,10 +42,11 @@ export const updateTask = task => {
   return {type: UPDATE_TASK, task: task};
 };
 export const completeTask = task => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
+      const token = getState().auth.token;
       const result = await axios.put(
-        `https://task-smart.firebaseio.com/task/${task.id}.json`,
+        `https://smart-task-6d705.firebaseio.com//task/${task.id}.json?auth=${token}`,
         {
           isCompleted: true,
           date: task.date,
@@ -64,10 +66,11 @@ export const completeTask = task => {
   };
 };
 export const deleteTask = task => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
+      const token = getState().auth.token;
       const result = await axios.delete(
-        `https://task-smart.firebaseio.com/task/${task.id}.json`,
+        `https://smart-task-6d705.firebaseio.com//task/${task.id}.json?auth=${token}`,
       );
       dispatch({type: DELETE_TASK, id: task.id});
     } catch (error) {
@@ -81,7 +84,7 @@ export const getTasks = () => {
   return async dispatch => {
     try {
       const result = await axios.get(
-        'https://task-smart.firebaseio.com/task.json',
+        'https://smart-task-6d705.firebaseio.com/task.json',
         {
           headers: {
             'Content-type': 'application/json',

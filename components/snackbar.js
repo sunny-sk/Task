@@ -18,7 +18,7 @@ function undoTask(fn, task) {
 
 function showError(fn, error) {
   Snackbar.show({
-    text: error.message,
+    text: error.message || error,
     duration: Snackbar.LENGTH_LONG,
     backgroundColor: Colors.cancel,
     action: {
