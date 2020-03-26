@@ -1,4 +1,4 @@
-package com.task;
+package com.smarty.task;
 
 import android.app.Application;
 import android.content.Context;
